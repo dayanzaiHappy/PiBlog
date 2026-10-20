@@ -21,6 +21,10 @@ const EXTERNAL_SVG =
 const RAW_SVG_OPEN = /<svg\b/i;
 const RAW_SVG_CLOSE = /<\/svg>/i;
 const FENCE = /^ {0,3}(`{3,}|~{3,})/;
+// 主题自己生成的 UI 图标（提示框标题里的 <svg class="callout-icon">）不是图表：
+// 它由 obsidian-blocks.js 产出，而两个 before_post_render 过滤器的执行顺序不稳定，
+// 这里显式跳过，避免图标被包成白底图表卡片。
+const UI_ICON = /class="callout-icon"/i;
 
 function stripXml(svg) {
   return String(svg)
@@ -59,7 +63,7 @@ function wrapRawSvgSource(content) {
       out.push(line);
       continue;
     }
-    if (!RAW_SVG_OPEN.test(line)) {
+    if (!RAW_SVG_OPEN.test(line) || UI_ICON.test(line)) {
       out.push(line);
       continue;
     }

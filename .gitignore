@@ -13,6 +13,9 @@ docs/
 HANDOFF.md
 NOTE.md
 test/
+bug-report/
+source/.obsidian/
+source/_drafts/
 
 # OS
 .DS_Store
