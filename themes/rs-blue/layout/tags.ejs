@@ -1,0 +1,9 @@
+<h1 class="site-page-title">标签</h1>
+<ul class="term-list">
+  <% page.terms.forEach(function (term) { %>
+  <li class="term-item">
+    <a class="term-link" href="<%- url_for(term.path) %>"><%= term.name %></a>
+    <span class="term-count"><%= term.length %></span>
+  </li>
+  <% }); %>
+</ul>

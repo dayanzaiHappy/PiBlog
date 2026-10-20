@@ -1,0 +1,19 @@
+# Hexo
+node_modules/
+public/
+db.json
+.deploy_git/
+.hexo/
+*.log
+
+# 本地私有：只在本地留存，不入公开仓库
+# （技术文档与使用说明都在 docs/）
+docs/
+.trae/
+HANDOFF.md
+NOTE.md
+test/
+
+# OS
+.DS_Store
+Thumbs.db

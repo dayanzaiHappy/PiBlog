@@ -1,0 +1,38 @@
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title><% if (page.title) { %><%= page.title %> · <%= config.title %><% } else { %><%= config.title %><% if (config.subtitle) { %> · <%= config.subtitle %><% } %><% } %></title>
+<%
+  var metaDesc = page.description || config.description || '';
+  if (!metaDesc && page.content) { metaDesc = first_paragraph(page.content, 120); }
+  if (!metaDesc) { metaDesc = config.title + (config.subtitle ? ' · ' + config.subtitle : ''); }
+  var metaKey = page.keywords || config.keywords || '';
+  if (!metaKey && page.tags && page.tags.length) { metaKey = page.tags.map(function (t) { return t.name; }).join(','); }
+%>
+<% if (metaDesc) { %><meta name="description" content="<%= metaDesc %>"><% } %>
+<% if (metaKey) { %><meta name="keywords" content="<%= metaKey %>"><% } %>
+
+<!-- 亮/暗模式必须在样式生效前定下来，避免首屏闪白（FOUC） -->
+<script>
+(function () {
+  var mode = '<%= theme.default_mode || "light" %>';
+  try {
+    var saved = window.localStorage.getItem('piblog-mode');
+    if (saved === 'dark' || saved === 'light') { mode = saved; }
+  } catch (e) {}
+  document.documentElement.setAttribute('data-mode', mode);
+})();
+</script>
+
+<!-- 样式分层：KaTeX → Typora 基础 → 内容主题（构建时可选）→ 站点骨架 → 扩展组件 → 暗色覆盖 → 打印增强 -->
+<link rel="stylesheet" href="<%- url_for('/css/katex/katex.min.css') %>">
+<link rel="stylesheet" href="<%- url_for('/css/base.css') %>">
+<link rel="stylesheet" href="<%- url_for(content_theme_path()) %>">
+<link rel="stylesheet" href="<%- url_for('/css/site.css') %>">
+<link rel="stylesheet" href="<%- url_for('/css/content-extras.css') %>">
+<link rel="stylesheet" href="<%- url_for('/css/dark.css') %>">
+<link rel="stylesheet" href="<%- url_for('/css/theme.css') %>">
+
+<% if (config.feed && config.feed.path) { %>
+<link rel="alternate" type="application/atom+xml" title="<%= config.title %>" href="<%- url_for('/' + config.feed.path) %>">
+<% } %>

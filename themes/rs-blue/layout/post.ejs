@@ -1,0 +1,26 @@
+<article class="site-article">
+  <div id="write">
+    <h1><%= page.title %></h1>
+    <p class="meta">
+      <strong>时间</strong>：<time datetime="<%- date(page.date, 'YYYY-MM-DDTHH:mm:ssZ') %>"><%= date(page.date, config.date_format) %></time>
+      <% if (page.categories && page.categories.length) { %>　|　<strong>分类</strong>：<%= page.categories.map(function (c) { return c.name; }).join(' / ') %><% } %>
+      <% if (page.tags && page.tags.length) { %>　|　<strong>标签</strong>：<%= page.tags.map(function (t) { return t.name; }).join(' / ') %><% } %>
+    </p>
+    <%- page.content %>
+  </div>
+</article>
+
+<nav class="post-nav" aria-label="上一篇 / 下一篇">
+  <% if (page.prev) { %>
+  <a class="post-nav-link post-nav-prev" href="<%- url_for(page.prev.path) %>">
+    <span class="post-nav-dir">‹ 上一篇</span>
+    <span class="post-nav-title"><%= page.prev.title %></span>
+  </a>
+  <% } %>
+  <% if (page.next) { %>
+  <a class="post-nav-link post-nav-next" href="<%- url_for(page.next.path) %>">
+    <span class="post-nav-dir">下一篇 ›</span>
+    <span class="post-nav-title"><%= page.next.title %></span>
+  </a>
+  <% } %>
+</nav>

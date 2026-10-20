@@ -1,0 +1,5 @@
+<% if (locals.heading) { %>
+<h1 class="site-page-title"><%= heading %></h1>
+<% } %>
+<%- partial('_partial/post-list', { posts: posts }) %>
+<%- partial('_partial/paginator') %>

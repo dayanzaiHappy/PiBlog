@@ -1,0 +1,17 @@
+<div class="post-list">
+<% posts.each(function (post) { %>
+  <a class="post-card" href="<%- url_for(post.path) %>">
+    <h2 class="post-card-title"><%= post.title %></h2>
+    <div class="post-card-meta">
+      <time datetime="<%- date(post.date, 'YYYY-MM-DDTHH:mm:ssZ') %>"><%= date(post.date, config.date_format) %></time>
+      <% if (post.categories && post.categories.length) { %>
+      <span class="post-card-cats"><%= post.categories.map(function (c) { return c.name; }).join(' / ') %></span>
+      <% } %>
+      <% if (post.tags && post.tags.length) { %>
+      <span class="post-card-tags"><%= post.tags.map(function (t) { return '#' + t.name; }).join(' ') %></span>
+      <% } %>
+    </div>
+    <p class="post-card-excerpt"><%- first_paragraph(post.excerpt || post.content, theme.excerpt_length || 110) %></p>
+  </a>
+<% }); %>
+</div>

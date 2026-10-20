@@ -1,0 +1,204 @@
+/* ===== 暗色模式覆盖（运行时亮/暗切换） =====
+   加载顺序在 site.css 之后，因此这里可以覆盖：
+     1) RS_BLUE.css 里由 CSS 变量驱动的部分 —— 只改变量
+     2) RS_BLUE.css / base.css / site.css 里「硬编码颜色」的部分 —— 逐条重写
+   全部规则都挂在 html[data-mode="dark"] 下，亮色模式不受影响。 */
+
+html[data-mode='dark'] {
+  /* ---- 内容主题变量（同时覆盖 base.css 的 --bg-color/--text-color） ---- */
+  --page-bg: #0f1720;
+  --card: #16202b;
+  --ink: #d6e2ee;
+  --deep: #e8f2fb;
+  --blue: #63a8e0;
+  --teal: #4fd1cf;
+  --line: #263442;
+  --soft: #1a2532;
+  --muted: #8fa2b3;
+  --muted-2: #9fb2c2;
+  --bg-color: #0f1720;
+  --text-color: #d6e2ee;
+  --select-text-bg-color: rgba(99, 168, 224, .38);
+}
+
+/* ---- RS_BLUE.css 硬编码部分 ---- */
+
+/* 名片条里的标签底色（原本是 rgba(27,94,156,.08)，在暗底上几乎看不见） */
+html[data-mode='dark'] #write p.meta strong {
+  background: rgba(99, 168, 224, .16);
+}
+
+/* 章眉的浅青渐洗 */
+html[data-mode='dark'] #write h2 {
+  background: linear-gradient(90deg, rgba(79, 209, 207, .16), rgba(99, 168, 224, .04));
+}
+
+/* 引用块的正文色 */
+html[data-mode='dark'] #write blockquote {
+  color: #b9cadb;
+}
+
+/* 行内代码底色 */
+html[data-mode='dark'] #write code {
+  background: rgba(99, 168, 224, .14);
+}
+
+/* 表头：--deep 在暗色下被调成了浅色（供标题文字用），
+   若仍拿它当表头底色会「浅底白字」，所以这里单独固定成主蓝 */
+html[data-mode='dark'] #write thead th {
+  background: #1b5e9c;
+}
+
+html[data-mode='dark'] #write tbody tr:last-child td {
+  border-bottom-color: var(--teal);
+}
+
+/* 图表卡片：SVG 是按「白底深笔画」设计的，暗色下若跟着变暗会看不清，
+   因此图表卡片始终保持白底，只把外框与题注条调暗。 */
+html[data-mode='dark'] #write .chart {
+  background: #ffffff;
+  border-color: #314254;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, .40);
+}
+
+html[data-mode='dark'] #write .chart figcaption,
+html[data-mode='dark'] #write p > em:only-child {
+  background: linear-gradient(180deg, rgba(247, 251, 255, .92), rgba(236, 244, 251, .98));
+  color: #5b6b7a;
+  border-top-color: #c9d8e6;
+}
+
+/* ---- base.css 硬编码部分 ---- */
+
+html[data-mode='dark'] kbd {
+  background: #1a2532;
+  border-color: #3a4a5c;
+  color: #d6e2ee;
+  box-shadow: none;
+}
+
+html[data-mode='dark'] sup.md-footnote {
+  background-color: rgba(255, 255, 255, .12);
+  color: #cfdbe7;
+}
+
+/* ---- site.css 硬编码部分 ---- */
+
+html[data-mode='dark'] .site-header {
+  background: rgba(15, 23, 32, .9);
+}
+
+html[data-mode='dark'] .site-nav-link:hover {
+  background: rgba(99, 168, 224, .14);
+}
+
+html[data-mode='dark'] .site-nav-link.is-active {
+  background: rgba(79, 209, 207, .16);
+}
+
+html[data-mode='dark'] .post-card {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, .35);
+}
+
+html[data-mode='dark'] .post-card:hover {
+  box-shadow: 0 4px 14px rgba(0, 0, 0, .45);
+}
+
+/* 分页当前页：site.css 用 --deep 当底色，暗色下 --deep 已是浅色 → 单独固定 */
+html[data-mode='dark'] .paginator .current {
+  background: #1b5e9c;
+  border-color: #1b5e9c;
+}
+
+html[data-mode='dark'] .term-item:hover {
+  box-shadow: 0 3px 10px rgba(0, 0, 0, .40);
+}
+
+/* ---- 扩展组件（content-extras.css）的暗色覆盖 ---- */
+
+html[data-mode='dark'] {
+  --code-bg: #131c26;
+  --code-gutter: #101820;
+  --code-line: #24313d;
+  --code-muted: #64788c;
+  --fold-bg: #16202b;
+}
+
+/* 语法着色：暗底上整体提亮一档 */
+html[data-mode='dark'] #write figure.highlight .comment,
+html[data-mode='dark'] #write figure.highlight .quote { color: #7f8fa0; }
+
+html[data-mode='dark'] #write figure.highlight .keyword,
+html[data-mode='dark'] #write figure.highlight .built_in,
+html[data-mode='dark'] #write figure.highlight .literal,
+html[data-mode='dark'] #write figure.highlight .type,
+html[data-mode='dark'] #write figure.highlight .section { color: #74b3ea; }
+
+html[data-mode='dark'] #write figure.highlight .string,
+html[data-mode='dark'] #write figure.highlight .regexp,
+html[data-mode='dark'] #write figure.highlight .select { color: #6fc9a6; }
+
+html[data-mode='dark'] #write figure.highlight .number,
+html[data-mode='dark'] #write figure.highlight .symbol,
+html[data-mode='dark'] #write figure.highlight .bullet,
+html[data-mode='dark'] #write figure.highlight .variable,
+html[data-mode='dark'] #write figure.highlight .template-variable { color: #e0a06a; }
+
+html[data-mode='dark'] #write figure.highlight .title,
+html[data-mode='dark'] #write figure.highlight .class,
+html[data-mode='dark'] #write figure.highlight .function,
+html[data-mode='dark'] #write figure.highlight .name,
+html[data-mode='dark'] #write figure.highlight .tag { color: #e8f2fb; }
+
+html[data-mode='dark'] #write figure.highlight .meta,
+html[data-mode='dark'] #write figure.highlight .meta-keyword,
+html[data-mode='dark'] #write figure.highlight .meta-string,
+html[data-mode='dark'] #write figure.highlight .attr,
+html[data-mode='dark'] #write figure.highlight .attribute,
+html[data-mode='dark'] #write figure.highlight .property { color: #b79bea; }
+
+html[data-mode='dark'] #write figure.highlight .params,
+html[data-mode='dark'] #write figure.highlight .formula { color: #8fc4f0; }
+
+html[data-mode='dark'] #write figure.highlight .punctuation,
+html[data-mode='dark'] #write figure.highlight .operator { color: #9aa9b8; }
+
+html[data-mode='dark'] #write figure.highlight .addition { color: #7fdc9d; background: rgba(127, 220, 157, .10); }
+html[data-mode='dark'] #write figure.highlight .deletion { color: #f08a80; background: rgba(240, 138, 128, .10); }
+
+/* 代码块容器 / 复制按钮 / 长块折叠渐变 */
+html[data-mode='dark'] #write figure.highlight { border-color: #263442; }
+
+html[data-mode='dark'] #write figure.highlight.is-folded::after {
+  background: linear-gradient(180deg, rgba(19, 28, 38, 0), var(--code-bg));
+}
+
+html[data-mode='dark'] #write .code-copy {
+  background: #1c2733;
+  border-color: #314254;
+  color: #9fb2c2;
+}
+
+/* ==高亮== 在暗底上用更淡的马克笔色 */
+html[data-mode='dark'] #write mark {
+  background: linear-gradient(180deg, transparent 52%, rgba(255, 203, 79, .42) 52%);
+}
+
+/* 提示框 / 折叠块 */
+html[data-mode='dark'] #write details.callout {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, .35);
+}
+
+html[data-mode='dark'] #write details.callout > summary.callout-title {
+  border-bottom-color: var(--line);
+}
+
+/* 灰色的 quote 在暗底偏暗，提亮一档 */
+html[data-mode='dark'] #write .callout-quote { --callout-rgb: 190, 190, 190; }
+
+/* 代码块文件名表头 */
+html[data-mode='dark'] #write figure.highlight figcaption {
+  background: var(--code-gutter, #101820);
+  border-bottom-color: #263442;
+  color: var(--muted-2, #9fb2c2);
+}

@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="<%= config.language %>">
+<head>
+  <%- partial('_partial/head') %>
+</head>
+<body>
+  <%- partial('_partial/header') %>
+  <main class="site-main">
+    <%- body %>
+  </main>
+  <%- partial('_partial/footer') %>
+  <script defer src="<%- url_for('/js/mode-toggle.js') %>"></script>
+  <script defer src="<%- url_for('/js/code-copy.js') %>"></script>
+  <script defer src="<%- url_for('/js/fold.js') %>"></script>
+</body>
+</html>

@@ -1,0 +1,70 @@
+/* ===== 打印与通用增强（加载在所有样式之后） ===== */
+
+@page {
+  size: A4;
+  margin: 12mm;
+}
+
+.chart {
+  display: block;
+  margin: 0.8em auto 0.2em;
+  text-align: center;
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+.chart svg {
+  max-width: 100%;
+  height: auto;
+}
+/* 雷达图高度较大，适当收窄以便与路线图同页 */
+.chart-skill-radar svg { max-width: 86%; }
+
+/* 图表题注 */
+p > em:only-child,
+.chart figcaption {
+  display: block;
+  text-align: center;
+  font-size: 0.86em;
+  color: #7a8a99;
+  font-style: normal;
+  margin: 0.35em 0 0;
+}
+
+/* 表格 */
+table {
+  page-break-inside: avoid;
+  break-inside: avoid;
+  font-size: 0.94em;
+}
+thead { display: table-header-group; }
+tr, th, td { page-break-inside: avoid; break-inside: avoid; }
+th { text-align: center; }
+td { vertical-align: top; }
+
+@media print {
+  /* 让主题底色铺满整张页面（含页边距区域），消除四周白色留白 */
+  html, body {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+    background-color: var(--page-bg, #ffffff) !important;
+  }
+  body.typora-export { padding: 0 !important; }
+  #write {
+    max-width: none !important;
+    width: auto !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+  h1, h2, h3, h4, h5 {
+    break-after: avoid-page;
+    page-break-after: avoid;
+  }
+  h1 { break-before: auto; }
+  h2 { break-before: auto; }
+  p { orphans: 3; widows: 3; }
+  a { color: inherit !important; text-decoration: none; }
+  .no-break, .chart, table, figure, img, svg {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+}

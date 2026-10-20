@@ -1,0 +1,269 @@
+/* ===== RS_BLUE（蓝风） =====
+   深空蓝 + 科技青，浅底深字，白底图表卡片，适合长时间阅读与打印。
+
+   分层约定：
+     RS_BLUE.css  → 屏幕观感（本文件）
+     theme.css    → 打印 / 分页（勿动其 @page 与 @media print 逻辑）
+   ============================================================ */
+
+:root{
+  /* ---- 主色 ---- */
+  --ink:#1d3346;        /* 正文 */
+  --deep:#0d2b45;       /* 一级标题 / 表头 */
+  --blue:#1b5e9c;
+  --teal:#17a2a2;
+  --line:#d8e3ee;       /* 发丝线 */
+  --soft:#f2f7fc;       /* 浅底块 */
+  --muted:#7a8a99;      /* 次要文字 */
+  --muted-2:#6b7c8c;    /* 图注：在浅蓝底上加深一档，保证可读 */
+
+  /* ---- 页面 ---- */
+  --page-bg:#F7FBFF;    /* 极浅冷蓝 */
+  --card:#ffffff;       /* 图表卡片 / 名片条 */
+
+  /* ---- 排版刻度：全篇间距只引用这几个值，避免忽宽忽窄 ---- */
+  --sp-1:.34em;
+  --sp-2:.62em;
+  --sp-3:1.05em;
+  --sp-4:1.7em;
+  --sp-5:2.3em;
+  --lh-text:1.78;       /* 正文行高：1.9 偏松，1.78 更接近期刊正文密度 */
+
+  --radius:8px;
+  --radius-lg:10px;
+}
+
+/* ============ 页面与容器 ============ */
+html{
+  font-size:16px;
+  background:var(--page-bg, #F7FBFF);
+}
+/* body 必须透明：否则屏幕是白、打印是浅蓝，预览与 PDF 不一致。
+   打印期由 build/theme.css 把 html/body 统一强制回 --page-bg。 */
+body{
+  background:transparent;
+  color:var(--ink);
+  margin:0;
+}
+#write{
+  max-width:830px;
+  margin:0 auto;
+  padding:24px 6px 48px;
+  font-family:"Microsoft YaHei","PingFang SC",sans-serif;
+  font-size:16px;
+  line-height:var(--lh-text);
+  color:var(--ink);
+  word-wrap:break-word;
+  word-break:normal;            /* 保证 PyTorch / GDAL / OpenCV 整词换行，不被硬折 */
+}
+
+/* ============ 报头：标题 + 副题 + 名片条 ============ */
+#write h1{
+  text-align:center;
+  font-size:2.05rem;
+  color:var(--deep);
+  letter-spacing:3px;
+  font-weight:800;
+  margin:.2em 0 .1em;
+}
+/* 标题下的双色短标：两端渐隐，比原来的 5px 实心粗条更克制 */
+#write h1:after{
+  content:"";
+  display:block;
+  width:134px; height:3px;
+  margin:.5em auto 0;
+  border-radius:2px;
+  background:linear-gradient(90deg,
+    rgba(27,94,156,0) 0%, var(--blue) 26%, var(--teal) 74%, rgba(23,162,162,0) 100%);
+}
+
+#write p.subtitle{
+  text-align:center;
+  color:var(--teal);
+  font-size:1.04rem;
+  letter-spacing:3px;
+  font-weight:600;
+  margin:var(--sp-2) 0 var(--sp-3);
+}
+
+/* 名片条：白底 + 顶部双色发丝带 + 浅投影，替代原来的灰底胶囊 */
+#write p.meta{
+  text-align:center;
+  color:var(--ink);
+  font-size:.86rem;
+  background-color:var(--card);
+  background-image:linear-gradient(90deg, var(--blue), var(--teal));
+  background-repeat:no-repeat;
+  background-size:100% 2px;
+  background-position:top left;
+  border:1px solid var(--line);
+  border-top:0;
+  border-radius:var(--radius);
+  padding:.62em .9em .58em;
+  margin:0 0 var(--sp-4);
+  box-shadow:0 1px 3px rgba(13,43,69,.06);
+}
+/* 姓名的「标签态」：4 个字段名做成浅蓝小圆角标签，值保持深色 */
+#write p.meta strong{
+  color:var(--blue);
+  font-weight:700;
+  font-size:.92em;
+  letter-spacing:.5px;
+  background:rgba(27,94,156,.08);
+  border-radius:4px;
+  padding:.1em .4em;
+}
+
+/* ============ 分隔线 ============ */
+hr{
+  border:0; height:1px;
+  margin:var(--sp-3) 0 var(--sp-4);
+  background:linear-gradient(90deg,
+    rgba(27,94,156,.55), rgba(23,162,162,.35) 46%, rgba(23,162,162,0));
+}
+/* 紧接章节标题的分隔线由「章眉」的顶部发丝线代替，避免双线并排 */
+#write hr:has(+ h2){ display:none; }
+
+/* ============ 章眉 ============ */
+#write h2{
+  font-size:1.3rem;
+  color:var(--deep);
+  font-weight:700;
+  margin:var(--sp-5) 0 var(--sp-3);
+  padding:.40em .8em .40em .85em;
+  border-left:5px solid var(--teal);
+  border-top:1px solid var(--line);
+  background:linear-gradient(90deg, rgba(23,162,162,.10), rgba(27,94,156,.015));
+  border-radius:0 var(--radius) var(--radius) 0;
+}
+#write h3{
+  font-size:1.1rem;
+  color:var(--blue);
+  font-weight:700;
+  margin:var(--sp-4) 0 var(--sp-2);
+}
+#write h3:before{ content:"▍"; color:var(--teal); margin-right:.28em; }
+
+/* ============ 正文 ============ */
+#write p{
+  margin:var(--sp-2) 0;
+  text-align:justify;             /* 中文密排两端对齐，右边缘成一条线 */
+  text-justify:inter-ideograph;   /* 跨引擎声明；Chromium 未实现该属性，为 no-op */
+  text-wrap:pretty;               /* 渐进增强：缓解末行孤字；不支持的引擎自动忽略 */
+}
+#write strong{ color:var(--blue); font-weight:700; }
+#write a{ color:var(--teal); text-decoration:none; }
+
+/* ============ 列表 ============ */
+#write ol, #write ul{ padding-left:1.35em; margin:var(--sp-2) 0; }
+#write li{ margin:var(--sp-1) 0; }
+#write li::marker{ color:var(--teal); font-weight:700; }
+
+/* ============ 引用 / 代码（当前报告未使用，保留骨架备用） ============ */
+#write blockquote{
+  margin:var(--sp-3) 0;
+  padding:.55em 1em;
+  border-left:5px solid var(--teal);
+  background:var(--card);
+  color:#3d556b;
+  border-radius:0 var(--radius) var(--radius) 0;
+}
+#write code{
+  background:rgba(27,94,156,.07);
+  border:1px solid var(--line);
+  border-radius:4px;
+  padding:.05em .35em;
+  color:var(--deep);
+  font-size:.92em;
+}
+
+/* ============ 表格：开放式细线 ============ */
+/* 表题（md 里是 **表 1 …** 独立成段，紧邻表格） */
+#write p:has(+ table){
+  text-align:left;
+  font-size:.92rem;
+  color:var(--deep);
+  margin:var(--sp-4) 0 0;
+  padding-left:.72em;
+  border-left:4px solid var(--teal);
+  line-height:1.5;
+}
+#write p:has(+ table) strong{ color:var(--deep); }
+
+#write table{
+  border-collapse:collapse;
+  table-layout:fixed;            /* 配合列宽，压掉第一列空档 */
+  width:100%;
+  margin:var(--sp-2) 0 var(--sp-4);
+  font-size:.92rem;
+}
+#write thead th{
+  background:var(--deep);
+  color:#fff;
+  font-weight:700;
+  letter-spacing:1px;
+  text-align:left;
+  padding:.6em .8em;
+  border:0;
+  border-bottom:2px solid var(--teal);
+}
+#write thead th:first-child{ border-radius:var(--radius) 0 0 0; }
+#write thead th:last-child{ border-radius:0 var(--radius) 0 0; }
+#write thead th:nth-child(1){ width:19%; }   /* 容纳 7 字标签不拆行 */
+#write thead th:nth-child(2){ width:35%; }   /* 最长课程名 27 字刚好 2 行，无孤字 */
+#write thead th:nth-child(3){ width:46%; }
+
+#write tbody td{
+  padding:.6em .8em;
+  border:0;
+  border-bottom:1px solid var(--line);
+  color:var(--ink);
+  vertical-align:top;
+  line-height:1.62;
+}
+#write tbody tr:last-child td{ border-bottom:2px solid var(--deep); }
+
+/* ============ 图表：白色卡片 + 统一图注 ============ */
+#write .chart{
+  display:block;
+  width:100%;
+  box-sizing:border-box;
+  margin:var(--sp-4) auto var(--sp-2);
+  padding:12px 14px 0;
+  text-align:center;
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:var(--radius-lg);
+  box-shadow:0 1px 4px rgba(13,43,69,.06);
+}
+#write .chart svg{ display:block; margin:0 auto; }
+/* 雷达图纵向尺寸大，收窄一点，给卡片留出呼吸并避免撑页 */
+#write .chart-skill-radar svg{ max-width:82%; }
+
+/* 图注：做成卡片底部的题注带（负 margin 撑满卡片内缘） */
+#write .chart figcaption,
+#write p > em:only-child{
+  display:block;
+  font-style:normal;
+  text-align:center;
+  color:var(--muted-2);
+  font-size:.84rem;
+  letter-spacing:.5px;
+  margin:10px -14px 0;
+  padding:9px 12px 10px;
+  border-top:1px solid var(--line);
+  background:linear-gradient(180deg, rgba(247,251,255,.55), rgba(236,244,251,.95));
+  border-radius:0 0 calc(var(--radius-lg) - 1px) calc(var(--radius-lg) - 1px);
+}
+
+/* ============ 收尾 ============ */
+#write > *:last-child{ margin-bottom:0; }
+
+/* 保证新增的白底卡片 / 表头 / 名片条在打印时确实出底色
+   （不改动 @page 与分页逻辑，仅声明色彩还原） */
+@media print{
+  #write .chart, #write .chart figcaption, #write thead th, #write p.meta{
+    -webkit-print-color-adjust:exact;
+    print-color-adjust:exact;
+  }
+}

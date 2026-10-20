@@ -1,0 +1,352 @@
+/* ===== 扩展语法样式（五类：图表卡片 / Obsidian 语法 / 数学 / 代码增强 / 折叠） =====
+   加载顺序在 site.css 之后、dark.css 之前 —— 所以这里可以用
+   「同特异性、后出现」的方式压过 RS_BLUE.css 对 #write table / td 的规则，
+   而暗色覆盖统一放在 dark.css 里。
+   图表卡片（.chart）的样式已由 RS_BLUE.css 提供，本文件不重复定义。 */
+
+:root {
+  --code-bg: #f6f9fd;
+  --code-gutter: #edf3fa;
+  --code-line: #e3ebf4;
+  --code-muted: #9aa9b8;
+  --fold-bg: #f2f7fc;
+}
+
+/* ============ 折叠：通用 details ============ */
+/* 任何 <details>（含手写的 <details class="fold">）都统一成这张卡片 */
+#write details {
+  margin: 1.2em 0;
+  border: 1px solid var(--line, #d8e3ee);
+  border-radius: 8px;
+  background: var(--fold-bg, #f2f7fc);
+  overflow: hidden;
+}
+
+/* 标记/图标列宽统一为 1.2em：标记绝对定位在左侧槽位，标题文字与正文都从 1.2em 起 */
+#write details > summary {
+  position: relative;
+  cursor: pointer;
+  list-style: none;
+  padding: .5em 1.2em;
+  font-weight: 600;
+  color: var(--deep, #0d2b45);
+  display: flex;
+  align-items: center;
+  gap: .5em;
+  white-space: normal;
+}
+
+#write details > summary::-webkit-details-marker { display: none; }
+
+#write details > summary::before {
+  content: "▸";
+  position: absolute;
+  left: .28em;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--teal, #17a2a2);
+  font-size: .9em;
+  transition: transform .18s;
+}
+
+#write details[open] > summary::before { transform: translateY(-50%) rotate(90deg); }
+
+#write details > summary:hover { color: var(--blue, #1b5e9c); }
+
+/* 正文：用包裹层一次性加内边距（子块各保留自身间距，避免二次叠加） */
+#write details > .details-body {
+  padding: 0 1.2em .9em;
+}
+#write details > .details-body > *:first-child { margin-top: .35em; }
+#write details > .details-body > *:last-child { margin-bottom: 0; }
+
+/* 兜底：手写 <details>（无包裹层）只给「无自带左间距的块」补缩进，不压列表/表格/代码块 */
+#write details:not(:has(> .details-body)) > *:not(summary):not(ul):not(ol):not(figure):not(table):not(details):not(blockquote) {
+  padding-left: 1.2em;
+  padding-right: 1.2em;
+}
+
+/* 嵌套：水平内边距有界，不再逐层累加 */
+#write details .details-body .details-body { padding-left: .4em; padding-right: .4em; }
+#write details .details-body .details-body .details-body { padding-left: 0; padding-right: 0; }
+
+/* ============ 折叠：::: collapse 语法糖 ============ */
+#write details.collapse {
+  background: var(--card, #fff);
+  border-left: 5px solid var(--blue, #1b5e9c);
+  border-radius: 0 8px 8px 0;
+}
+
+#write details.collapse > summary.collapse-title {
+  background: linear-gradient(90deg, rgba(27, 94, 156, .08), rgba(27, 94, 156, .01));
+}
+
+/* ============ 折叠：提示框（callout） ============ */
+#write details.callout {
+  background: var(--card, #fff);
+  border-left: 5px solid rgb(var(--callout-rgb, 8, 109, 221));
+  border-radius: 0 10px 10px 0;
+  box-shadow: 0 1px 3px rgba(13, 43, 69, .05);
+}
+
+#write details.callout > summary.callout-title {
+  font-weight: 700;
+  background: linear-gradient(90deg, rgba(var(--callout-rgb, 8, 109, 221), .14), rgba(var(--callout-rgb, 8, 109, 221), .02));
+  border-bottom: 1px solid var(--line, #d8e3ee);
+}
+
+#write details.callout[open] > summary.callout-title { border-bottom-style: solid; }
+
+/* 提示框用类型图标（左槽位），不再用通用 ▸ */
+#write details.callout > summary.callout-title::before { content: none; }
+
+#write .callout-icon {
+  position: absolute;
+  left: .12em;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 1.05em;
+  height: 1.05em;
+  color: rgb(var(--callout-rgb, 8, 109, 221));
+}
+
+/* 折叠指示：放到标题右侧 */
+#write details.callout > summary.callout-title::after {
+  content: "▸";
+  margin-left: auto;
+  color: rgb(var(--callout-rgb, 8, 109, 221));
+  font-size: .9em;
+  transition: transform .18s;
+}
+
+#write details.callout[open] > summary.callout-title::after { transform: rotate(90deg); }
+
+/* 13 个类型（别名已由 obsidian-blocks.js 归一到主类型）只声明强调色，其余由变量驱动 */
+#write .callout-note { --callout-rgb: 8, 109, 221; }
+#write .callout-abstract { --callout-rgb: 0, 191, 188; }
+#write .callout-info { --callout-rgb: 8, 109, 221; }
+#write .callout-todo { --callout-rgb: 8, 109, 221; }
+#write .callout-tip { --callout-rgb: 0, 191, 188; }
+#write .callout-success { --callout-rgb: 8, 185, 78; }
+#write .callout-question { --callout-rgb: 236, 117, 0; }
+#write .callout-warning { --callout-rgb: 236, 117, 0; }
+#write .callout-failure { --callout-rgb: 233, 49, 71; }
+#write .callout-danger { --callout-rgb: 233, 49, 71; }
+#write .callout-bug { --callout-rgb: 233, 49, 71; }
+#write .callout-example { --callout-rgb: 120, 82, 238; }
+#write .callout-quote { --callout-rgb: 158, 158, 158; }
+
+/* ============ 代码块（Hexo highlight.js） ============ */
+#write figure.highlight {
+  position: relative;
+  margin: 1.2em 0;
+  border: 1px solid var(--line, #d8e3ee);
+  border-radius: 8px;
+  background: var(--code-bg, #f6f9fd);
+  overflow: hidden;
+  font-size: .88rem;
+  line-height: 1.66;
+}
+
+#write figure.highlight table {
+  width: 100%;
+  margin: 0;
+  border: 0;
+  table-layout: fixed;
+  border-collapse: collapse;
+}
+
+#write figure.highlight td {
+  border: 0;
+  padding: 0;
+  vertical-align: top;
+  background: transparent;
+  color: inherit;
+  line-height: inherit;
+}
+
+#write figure.highlight tbody tr:last-child td { border: 0; }
+
+#write figure.highlight td.gutter {
+  width: 3.1em;
+  user-select: none;
+  -webkit-user-select: none;
+  text-align: right;
+  background: var(--code-gutter, #edf3fa);
+  border-right: 1px solid var(--line, #d8e3ee);
+  color: var(--code-muted, #9aa9b8);
+}
+
+#write figure.highlight pre {
+  margin: 0;
+  padding: .85em 1em;
+  background: transparent;
+  border: 0;
+  font-family: var(--monospace);
+  font-size: inherit;
+  white-space: pre;
+  overflow-x: auto;
+  overflow-y: hidden;
+  width: 100%;
+}
+
+#write figure.highlight td.gutter pre { padding: .85em .55em; overflow: visible; }
+
+/* 文件名表头（{% codeblock 文件名 %}）：独立底色/内边距/分隔线；右侧预留复制按钮位置 */
+#write figure.highlight figcaption {
+  display: flex;
+  align-items: center;
+  gap: .5em;
+  padding: .45em 4.4em .45em .9em;
+  font-size: .82rem;
+  font-weight: 600;
+  color: var(--muted-2, #6b7c8c);
+  background: var(--code-gutter, #edf3fa);
+  border-bottom: 1px solid var(--line, #d8e3ee);
+}
+
+#write figure.highlight figcaption > span {
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-family: var(--monospace);
+}
+
+/* 注：.line 保持 inline —— Hexo highlight 用「<span class="line">…</span><br>」串联，
+   若给 .line 设 display:block，每个 <br> 会变成块内空行 → 双倍行距。 */
+
+/* 语法着色（Hexo 关闭了 hljs 前缀，类名即 scope 名，故统一限定在 figure.highlight 内） */
+#write figure.highlight .comment,
+#write figure.highlight .quote { color: #8a97a4; font-style: italic; }
+
+#write figure.highlight .keyword,
+#write figure.highlight .built_in,
+#write figure.highlight .literal,
+#write figure.highlight .type,
+#write figure.highlight .section { color: #1b5e9c; font-weight: 600; }
+
+#write figure.highlight .string,
+#write figure.highlight .regexp,
+#write figure.highlight .select { color: #0f7b6c; }
+
+#write figure.highlight .number,
+#write figure.highlight .symbol,
+#write figure.highlight .bullet,
+#write figure.highlight .variable,
+#write figure.highlight .template-variable { color: #b3601f; }
+
+#write figure.highlight .title,
+#write figure.highlight .class,
+#write figure.highlight .function,
+#write figure.highlight .name,
+#write figure.highlight .tag { color: #0d2b45; font-weight: 700; }
+
+#write figure.highlight .meta,
+#write figure.highlight .meta-keyword,
+#write figure.highlight .meta-string,
+#write figure.highlight .attr,
+#write figure.highlight .attribute,
+#write figure.highlight .property { color: #7a4fb5; }
+
+#write figure.highlight .params { color: #2e6da4; }
+#write figure.highlight .formula { color: #2e6da4; }
+#write figure.highlight .punctuation,
+#write figure.highlight .operator { color: #5b6b7a; }
+#write figure.highlight .selector-tag,
+#write figure.highlight .selector-id,
+#write figure.highlight .selector-class,
+#write figure.highlight .selector-attr,
+#write figure.highlight .selector-pseudo { color: #17a2a2; }
+#write figure.highlight .addition { color: #1a7f37; background: rgba(26, 127, 55, .08); }
+#write figure.highlight .deletion { color: #b3261e; background: rgba(179, 38, 30, .08); }
+#write figure.highlight .doctag,
+#write figure.highlight .char,
+#write figure.highlight .subst { color: inherit; }
+#write figure.highlight .emphasis { font-style: italic; }
+#write figure.highlight .strong { font-weight: 700; }
+#write figure.highlight .link { text-decoration: underline; }
+
+/* 复制按钮 */
+#write .code-copy {
+  position: absolute;
+  top: .45em;
+  right: .5em;
+  z-index: 2;
+  font-size: .75rem;
+  line-height: 1;
+  padding: .34em .6em;
+  color: var(--muted-2, #6b7c8c);
+  background: var(--card, #fff);
+  border: 1px solid var(--line, #d8e3ee);
+  border-radius: 6px;
+  cursor: pointer;
+  opacity: .7;
+  transition: opacity .16s, color .16s, border-color .16s;
+}
+
+#write .code-copy:hover,
+#write .code-copy:focus { opacity: 1; color: var(--teal, #17a2a2); border-color: var(--teal, #17a2a2); }
+#write .code-copy.is-done { opacity: 1; color: var(--teal, #17a2a2); border-color: var(--teal, #17a2a2); }
+
+/* 长代码块自动折叠（fold.js 注入） */
+#write .fold-toggle {
+  display: inline-block;
+  margin: 1.2em 0 .35em;
+  padding: .34em .75em;
+  font-size: .8rem;
+  color: var(--blue, #1b5e9c);
+  background: var(--fold-bg, #f2f7fc);
+  border: 1px solid var(--line, #d8e3ee);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: color .16s, border-color .16s;
+}
+
+#write .fold-toggle:hover { color: var(--teal, #17a2a2); border-color: var(--teal, #17a2a2); }
+
+#write figure.highlight.is-folded { max-height: 18em; }
+
+#write figure.highlight.is-folded::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 3.4em;
+  background: linear-gradient(180deg, rgba(246, 249, 253, 0), var(--code-bg, #f6f9fd));
+  pointer-events: none;
+}
+
+/* ============ ==高亮==（markdown-it-mark） ============ */
+#write mark {
+  background: linear-gradient(180deg, transparent 52%, rgba(255, 203, 79, .72) 52%);
+  color: inherit;
+  padding: 0 .12em;
+  border-radius: 2px;
+}
+
+/* ============ 双链（[[…]]） ============ */
+#write a.wikilink {
+  color: var(--teal, #17a2a2);
+  text-decoration: none;
+  border-bottom: 1px dashed rgba(23, 162, 162, .55);
+}
+
+#write a.wikilink:hover { border-bottom-style: solid; }
+
+/* ============ 数学公式（KaTeX） ============ */
+#write .katex { font-size: 1.04em; }
+
+#write .katex-display {
+  margin: 1.1em 0;
+  padding: .35em 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+/* ============ 小屏 ============ */
+@media screen and (max-width: 640px) {
+  #write figure.highlight { font-size: .82rem; }
+  #write details > .details-body { padding-left: .75em; padding-right: .75em; }
+}

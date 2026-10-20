@@ -1,0 +1,21 @@
+﻿# rs-blue 主题配置
+# 该文件的值在模板里通过 `theme.<key>` 读取
+
+# 顶部导航（顺序即显示顺序）
+menu:
+  首页: /
+  归档: /archives/
+  分类: /categories/
+  标签: /tags/
+  关于: /about/
+
+# 内容主题（构建时切换）：对应 source/css/themes/<name>.css
+content_theme: RS_BLUE
+
+# 亮/暗默认模式：light | dark（页面上可切换，选择写入 localStorage: piblog-mode）
+default_mode: light
+
+# 首页摘要长度（字符数）
+excerpt_length: 110
+
+

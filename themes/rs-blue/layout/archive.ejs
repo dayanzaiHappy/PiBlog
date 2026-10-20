@@ -1,0 +1,7 @@
+<%
+  var label = '归档';
+  if (page.year) {
+    label = page.year + (page.month ? ' 年 ' + (page.month < 10 ? '0' + page.month : page.month) + ' 月 归档' : ' 年归档');
+  }
+%>
+<%- partial('_partial/list-view', { posts: page.posts, heading: label }) %>
